@@ -18,3 +18,4 @@
 2. https://livebook.manning.com/book/lucene-in-action-second-edition/chapter-4/38
 3. https://www.tutorialspoint.com/lucene/lucene_booleanquery.htm
 4. https://github.com/neilgupta/SoundexFilter
+5. https://lucene.apache.org/core/3_6_2/api/core/org/apache/lucene/analysis/package-summary.html
