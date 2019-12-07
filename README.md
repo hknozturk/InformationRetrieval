@@ -11,3 +11,10 @@
 
 - Hakan Yoztyurk
 - Muneeb Ur Rahman
+
+### References
+
+1. https://www.avajava.com/tutorials/lessons/how-do-i-combine-queries-with-a-boolean-query.html
+2. https://livebook.manning.com/book/lucene-in-action-second-edition/chapter-4/38
+3. https://www.tutorialspoint.com/lucene/lucene_booleanquery.htm
+4. https://github.com/neilgupta/SoundexFilter

@@ -8,11 +8,6 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 
 /**
- * References:
- * 1. https://livebook.manning.com/book/lucene-in-action-second-edition/chapter-4/38
- **/
-
-/**
  * '+' indicates that a term is a MUST
  * '-' indicates that a term is a MUST_NOT
  * "" indicates that a term is a SHOULD

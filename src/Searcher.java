@@ -1,9 +1,3 @@
-/**
- * References for SearchQuery
- * 1. https://www.avajava.com/tutorials/lessons/how-do-i-combine-queries-with-a-boolean-query.html
- * 2. https://www.tutorialspoint.com/lucene/lucene_booleanquery.htm
- * */
-
 import java.io.File;
 import java.io.IOException;
 
