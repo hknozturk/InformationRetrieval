@@ -6,10 +6,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
@@ -22,6 +19,7 @@ public class Searcher {
     public Searcher(String indexDirectoryPath) throws IOException {
         Directory indexDirectory = FSDirectory.open(new File(indexDirectoryPath));
         indexSearcher = new IndexSearcher(indexDirectory);
+        indexSearcher.setSimilarity(similarity);
         queryParser = new QueryParser(Version.LUCENE_36, Constants.CONTENTS, new StandardAnalyzer(Version.LUCENE_36));
     }
 
@@ -41,4 +39,17 @@ public class Searcher {
     public void close() throws IOException {
         indexSearcher.close();
     }
+    /**
+     * TO-DO: We need to implement Euclidean Distance for scoring.
+     * Link may help:
+     * - https://lucene.apache.org/core/3_6_2/api/core/org/apache/lucene/search/Similarity.html
+     * - https://stackoverflow.com/questions/41090904/lucene-scoring-get-cosine-similarity-as-scores
+     * - http://www.lucenetutorial.com/advanced-topics/scoring.html
+     * - Lecture 6 slides
+     **/
+    Similarity similarity = new DefaultSimilarity() {
+        public float idf(int i, int il) {
+            return 1;
+        }
+    };
 }

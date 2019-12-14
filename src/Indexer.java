@@ -40,6 +40,14 @@ public class Indexer {
         org.jsoup.nodes.Document htmlDoc = Jsoup.parse(file, "utf-8");
         String bodyText = htmlDoc.body().text();
 
+        /**
+         * - ANALYZED: analyze, then do indexing. For normal text indexing. Each token is searchable separately.
+         * - NOT_ANALYZED: no analyzing, but do indexing. For complete text indexing. E.g. person's names and URL etc.
+         * - ANALYZED_NO_NORMS: variant of ANALYZED. NORMS are not stored in the indexes.
+         * NORMS are used to boost searching and this often ends up consuming a lot of memory.
+         * - NOT_ANALYZED_NO_NORMS: variant of NOT_ANALYZED. Indexing is done but NORMS are not stored in the indexes.
+         * - NO: Field value is not searchable.
+        **/
         document.add(new Field(Constants.CONTENTS, bodyText, Field.Store.YES, Field.Index.ANALYZED));
         document.add(new Field(Constants.FILE_NAME, file.getName(), Field.Store.YES, Field.Index.NOT_ANALYZED));
         document.add(new Field(Constants.FILE_PATH, file.getCanonicalPath(), Field.Store.YES, Field.Index.NOT_ANALYZED));
