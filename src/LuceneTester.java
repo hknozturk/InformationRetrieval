@@ -3,9 +3,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.*;
 
 /**
  * '+' indicates that a term is a MUST
@@ -37,6 +37,9 @@ public class LuceneTester {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String searchQuery = reader.readLine();
 
+//        tester.sortUsingIndex(searchQuery);
+//        tester.sortUsingRelevance(searchQuery);
+
 //        tester.creteIndex();
         tester.search(searchQuery);
     }
@@ -60,9 +63,50 @@ public class LuceneTester {
         System.out.println(hits.totalHits + " documents found.\nTime: " + (endTime - startTime) + " ms");
         for (ScoreDoc scoreDoc : hits.scoreDocs) {
             Document doc = searcher.getDocument(scoreDoc);
+            System.out.print("Score: "+ scoreDoc.score + " ");
             System.out.println("File: " + doc.get(Constants.FILE_PATH));
         }
 
+        searcher.close();
+    }
+
+    private void sortUsingRelevance(String searchQuery) throws IOException, ParseException {
+        searcher = new Searcher(indexDir);
+        long startTime = System.currentTimeMillis();
+
+        Term term = new Term(Constants.CONTENTS, searchQuery);
+        Query query = new FuzzyQuery(term);
+        searcher.setDefaultFieldSortScoring(true, false);
+        TopDocs hits = searcher.search(query, Sort.RELEVANCE);
+        long endTime = System.currentTimeMillis();
+
+        System.out.println(hits.totalHits +
+                " documents found. Time :" + (endTime - startTime) + "ms");
+        for(ScoreDoc scoreDoc : hits.scoreDocs) {
+            Document doc = searcher.getDocument(scoreDoc);
+            System.out.print("Score: "+ scoreDoc.score + " ");
+            System.out.println("File: "+ doc.get(Constants.FILE_PATH));
+        }
+        searcher.close();
+    }
+
+    private void sortUsingIndex(String searchQuery) throws IOException, ParseException {
+        searcher = new Searcher(indexDir);
+        long startTime = System.currentTimeMillis();
+
+        Term term = new Term(Constants.CONTENTS, searchQuery);
+        Query query = new FuzzyQuery(term);
+        searcher.setDefaultFieldSortScoring(true, false);
+        TopDocs hits = searcher.search(query, Sort.INDEXORDER);
+        long endTime = System.currentTimeMillis();
+
+        System.out.println(hits.totalHits +
+                " documents found. Time :" + (endTime - startTime) + "ms");
+        for(ScoreDoc scoreDoc : hits.scoreDocs) {
+            Document doc = searcher.getDocument(scoreDoc);
+            System.out.print("Score: "+ scoreDoc.score + " ");
+            System.out.println("File: "+ doc.get(Constants.FILE_PATH));
+        }
         searcher.close();
     }
 }

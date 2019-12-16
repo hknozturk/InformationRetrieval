@@ -19,7 +19,7 @@ public class Searcher {
     public Searcher(String indexDirectoryPath) throws IOException {
         Directory indexDirectory = FSDirectory.open(new File(indexDirectoryPath));
         indexSearcher = new IndexSearcher(indexDirectory);
-        indexSearcher.setSimilarity(similarity);
+//        indexSearcher.setSimilarity(similarity);
         queryParser = new QueryParser(Version.LUCENE_36, Constants.CONTENTS, new StandardAnalyzer(Version.LUCENE_36));
     }
 
@@ -30,6 +30,18 @@ public class Searcher {
         System.out.println("Query: " + query.toString());
 
         return indexSearcher.search(query, Constants.MAX_SEARCH);
+    }
+
+    public TopDocs search(Query query) throws IOException, ParseException{
+        return indexSearcher.search(query, Constants.MAX_SEARCH);
+    }
+
+    public TopDocs search(Query query, Sort sort) throws IOException, ParseException {
+        return indexSearcher.search(query, Constants.MAX_SEARCH, sort);
+    }
+
+    public void setDefaultFieldSortScoring(boolean doTrackScores, boolean doMaxScores) {
+        indexSearcher.setDefaultFieldSortScoring(doTrackScores, doMaxScores);
     }
 
     public Document getDocument(ScoreDoc scoreDoc) throws IOException, ParseException {
