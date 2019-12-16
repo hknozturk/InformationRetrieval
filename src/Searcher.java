@@ -46,6 +46,8 @@ public class Searcher {
      * - https://stackoverflow.com/questions/41090904/lucene-scoring-get-cosine-similarity-as-scores
      * - http://www.lucenetutorial.com/advanced-topics/scoring.html
      * - Lecture 6 slides
+     *
+     * We can compute TF-IDF weighted vector space model by using the IndexReader.getTermFreqVector() and Searcher.docFreq()
      **/
     Similarity similarity = new DefaultSimilarity() {
         public float idf(int i, int il) {
