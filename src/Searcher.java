@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.IOException;
 
+import Soundex.SoundexAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
@@ -21,6 +22,7 @@ public class Searcher {
         indexSearcher = new IndexSearcher(indexDirectory);
 //        indexSearcher.setSimilarity(similarity);
         queryParser = new QueryParser(Version.LUCENE_36, Constants.CONTENTS, new StandardAnalyzer(Version.LUCENE_36));
+//        queryParser = new QueryParser(Version.LUCENE_36, Constants.CONTENTS, new SoundexAnalyzer(Version.LUCENE_36));
     }
 
     public TopDocs search(String searchQuery) throws IOException, ParseException {

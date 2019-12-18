@@ -32,6 +32,8 @@ public class LuceneTester {
         LuceneTester tester;
         tester = new LuceneTester();
 
+//        tester.creteIndex();
+
         System.out.println("Welcome to Wikipedia Search Engine");
         System.out.println("Enter search query:");
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -39,8 +41,6 @@ public class LuceneTester {
 
 //        tester.sortUsingIndex(searchQuery);
 //        tester.sortUsingRelevance(searchQuery);
-
-//        tester.creteIndex();
         tester.search(searchQuery);
     }
 

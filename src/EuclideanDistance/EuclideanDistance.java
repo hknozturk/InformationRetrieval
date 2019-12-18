@@ -1,6 +1,7 @@
 package EuclideanDistance;
 
 import java.awt.*;
+import java.util.Vector;
 
 /**
  * Euclidean Distance calculation.
@@ -16,6 +17,23 @@ public class EuclideanDistance {
         double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
         System.out.println("Distance between two vectors are: " + distance);
+        return distance;
+    }
+
+    public double calculateDistance(Double[] queryVector, Double[] documentVector) {
+        double distance = 0;
+        if (queryVector.length != documentVector.length) {
+            System.out.println("ERROR: vectors don't have equal dimensions");
+
+            return -1;
+        } else {
+            for (int i = 0; i < queryVector.length; i++) {
+                distance += queryVector[i] - documentVector[i];
+            }
+
+            distance = Math.sqrt(distance);
+        }
+
         return distance;
     }
 }
