@@ -1,11 +1,17 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import EuclideanDistance.EuclideanDistance;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.index.TermFreqVector;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.*;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
 
 /**
  * '+' indicates that a term is a MUST
@@ -40,8 +46,8 @@ public class LuceneTester {
         String searchQuery = reader.readLine();
 
 //        tester.sortUsingIndex(searchQuery);
-//        tester.sortUsingRelevance(searchQuery);
-        tester.search(searchQuery);
+        tester.sortUsingRelevance(searchQuery);
+//        tester.search(searchQuery);
     }
 
     private void creteIndex() throws IOException {
@@ -55,6 +61,8 @@ public class LuceneTester {
     }
 
     private void search(String searchQuery) throws IOException, ParseException {
+        Directory indexDirectory = FSDirectory.open(new File(indexDir));
+        IndexReader indexReader = IndexReader.open(indexDirectory);
         searcher = new Searcher(indexDir);
         long startTime = System.currentTimeMillis();
         TopDocs hits = searcher.search(searchQuery);
@@ -62,50 +70,58 @@ public class LuceneTester {
 
         System.out.println(hits.totalHits + " documents found.\nTime: " + (endTime - startTime) + " ms");
         for (ScoreDoc scoreDoc : hits.scoreDocs) {
+            int docId = scoreDoc.doc;
             Document doc = searcher.getDocument(scoreDoc);
+            TermFreqVector termFreqVector = indexReader.getTermFreqVector(docId, Constants.CONTENTS);
             System.out.print("Score: "+ scoreDoc.score + " ");
             System.out.println("File: " + doc.get(Constants.FILE_PATH));
+            System.out.println("Document Term Freq: " + termFreqVector);
         }
 
         searcher.close();
     }
 
     private void sortUsingRelevance(String searchQuery) throws IOException, ParseException {
+        Directory indexDirectory = FSDirectory.open(new File(indexDir));
+        IndexReader indexReader = IndexReader.open(indexDirectory);
         searcher = new Searcher(indexDir);
         long startTime = System.currentTimeMillis();
-
-        Term term = new Term(Constants.CONTENTS, searchQuery);
-        Query query = new FuzzyQuery(term);
         searcher.setDefaultFieldSortScoring(true, false);
-        TopDocs hits = searcher.search(query, Sort.RELEVANCE);
+        TopDocs hits = searcher.search(searchQuery, Sort.RELEVANCE);
         long endTime = System.currentTimeMillis();
 
         System.out.println(hits.totalHits +
                 " documents found. Time :" + (endTime - startTime) + "ms");
         for(ScoreDoc scoreDoc : hits.scoreDocs) {
+            int docId = scoreDoc.doc;
             Document doc = searcher.getDocument(scoreDoc);
+            TermFreqVector termFreqVector = indexReader.getTermFreqVector(docId, Constants.CONTENTS);
             System.out.print("Score: "+ scoreDoc.score + " ");
             System.out.println("File: "+ doc.get(Constants.FILE_PATH));
+//            System.out.println("Document Term Freq: " + termFreqVector);
         }
         searcher.close();
     }
 
     private void sortUsingIndex(String searchQuery) throws IOException, ParseException {
+        Directory indexDirectory = FSDirectory.open(new File(indexDir));
+        IndexReader indexReader = IndexReader.open(indexDirectory);
         searcher = new Searcher(indexDir);
         long startTime = System.currentTimeMillis();
 
-        Term term = new Term(Constants.CONTENTS, searchQuery);
-        Query query = new FuzzyQuery(term);
         searcher.setDefaultFieldSortScoring(true, false);
-        TopDocs hits = searcher.search(query, Sort.INDEXORDER);
+        TopDocs hits = searcher.search(searchQuery, Sort.INDEXORDER);
         long endTime = System.currentTimeMillis();
 
         System.out.println(hits.totalHits +
                 " documents found. Time :" + (endTime - startTime) + "ms");
         for(ScoreDoc scoreDoc : hits.scoreDocs) {
+            int docId = scoreDoc.doc;
             Document doc = searcher.getDocument(scoreDoc);
+            TermFreqVector termFreqVector = indexReader.getTermFreqVector(docId, Constants.CONTENTS);
             System.out.print("Score: "+ scoreDoc.score + " ");
             System.out.println("File: "+ doc.get(Constants.FILE_PATH));
+            System.out.println("Document Term Freq: " + termFreqVector);
         }
         searcher.close();
     }

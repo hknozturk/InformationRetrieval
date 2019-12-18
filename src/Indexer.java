@@ -49,8 +49,10 @@ public class Indexer {
          * NORMS are used to boost searching and this often ends up consuming a lot of memory.
          * - NOT_ANALYZED_NO_NORMS: variant of NOT_ANALYZED. Indexing is done but NORMS are not stored in the indexes.
          * - NO: Field value is not searchable.
+         *
+         * Field.TermVector.YES will store TermVectors in the index.
         **/
-        document.add(new Field(Constants.CONTENTS, bodyText, Field.Store.YES, Field.Index.ANALYZED));
+        document.add(new Field(Constants.CONTENTS, bodyText, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES));
         document.add(new Field(Constants.FILE_NAME, file.getName(), Field.Store.YES, Field.Index.NOT_ANALYZED));
         document.add(new Field(Constants.FILE_PATH, file.getCanonicalPath(), Field.Store.YES, Field.Index.NOT_ANALYZED));
 

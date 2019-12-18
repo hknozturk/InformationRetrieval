@@ -5,6 +5,7 @@ import Soundex.SoundexAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.*;
@@ -20,7 +21,7 @@ public class Searcher {
     public Searcher(String indexDirectoryPath) throws IOException {
         Directory indexDirectory = FSDirectory.open(new File(indexDirectoryPath));
         indexSearcher = new IndexSearcher(indexDirectory);
-//        indexSearcher.setSimilarity(similarity);
+        indexSearcher.setSimilarity(new DefaultSimilarity());
         queryParser = new QueryParser(Version.LUCENE_36, Constants.CONTENTS, new StandardAnalyzer(Version.LUCENE_36));
 //        queryParser = new QueryParser(Version.LUCENE_36, Constants.CONTENTS, new SoundexAnalyzer(Version.LUCENE_36));
     }
@@ -34,11 +35,12 @@ public class Searcher {
         return indexSearcher.search(query, Constants.MAX_SEARCH);
     }
 
-    public TopDocs search(Query query) throws IOException, ParseException{
-        return indexSearcher.search(query, Constants.MAX_SEARCH);
-    }
+    public TopDocs search(String searchQuery, Sort sort) throws IOException, ParseException {
+        System.out.println("Searching for " + searchQuery);
+        query = queryParser.parse(searchQuery);
+        System.out.println("Type of query: " + query.getClass().getSimpleName());
+        System.out.println("Query: " + query.toString());
 
-    public TopDocs search(Query query, Sort sort) throws IOException, ParseException {
         return indexSearcher.search(query, Constants.MAX_SEARCH, sort);
     }
 
@@ -63,9 +65,9 @@ public class Searcher {
      *
      * We can compute TF-IDF weighted vector space model by using the IndexReader.getTermFreqVector() and Searcher.docFreq()
      **/
-    Similarity similarity = new DefaultSimilarity() {
+    /*Similarity similarity = new DefaultSimilarity() {
         public float idf(int i, int il) {
             return 1;
         }
-    };
+    };*/
 }
