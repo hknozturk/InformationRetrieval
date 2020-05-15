@@ -7,11 +7,6 @@
 - B-tree implementation and wild-cards.
 - Ranking
 
-### Group Members
-
-- Hakan Yoztyurk
-- Muneeb Ur Rahman
-
 ### References
 
 1. https://www.avajava.com/tutorials/lessons/how-do-i-combine-queries-with-a-boolean-query.html
